@@ -53,11 +53,40 @@
         .video-title .section-num { font-size: 0.6rem; background: #dce8f2; padding: 2px 10px; border-radius: 40px; font-weight: 600; color: #1a4d66; }
         .video-desc { color: #4d6f86; font-size: 0.75rem; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
         .video-desc i { color: #598aa8; font-size: 0.7rem; }
-        .video-player-container { margin-top: 2px; border-radius: 14px; overflow: hidden; background: #0a1e2a; width: 100%; aspect-ratio: 16/9; }
-        .video-player-container video { width: 100%; height: 100%; display: block; background: #0a1e2a; object-fit: contain; }
+        /* ★★★ 播放器容器：背景色改为柔和的浅灰蓝色 ★★★ */
+        .video-player-container {
+            margin-top: 2px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #f0f4f8;  /* 柔和的浅灰蓝色 */
+            width: 100%;
+            aspect-ratio: 16/9;
+        }
+        .video-player-container video {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: #f0f4f8;  /* 与容器背景一致 */
+            object-fit: contain;
+        }
         .video-card.locked .video-player-container { display: none; }
         .video-card.locked .video-player-placeholder { display: flex; }
-        .video-player-placeholder { background: #eaf2f9; border-radius: 60px; padding: 8px 12px; text-align: center; font-weight: 500; color: #21506a; border: 1px dashed #b6d0e0; margin-top: 2px; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; }
+        .video-player-placeholder {
+            background: #eaf2f9;
+            border-radius: 60px;
+            padding: 8px 12px;
+            text-align: center;
+            font-weight: 500;
+            color: #21506a;
+            border: 1px dashed #b6d0e0;
+            margin-top: 2px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 40px;
+        }
         .video-card.locked .video-player-placeholder { background: #f2f2f2; color: #7d7d7d; border-color: #d6d6d6; }
         .video-card.locked .video-player-placeholder i { color: #a0a0a0; }
         .unlock-hint { margin-top: 6px; font-size: 0.65rem; color: #5f7e93; background: #eaf3fa; padding: 2px 12px; border-radius: 60px; display: inline-block; align-self: flex-start; }
@@ -251,25 +280,32 @@
         const REPO_OWNER = '51ruankao';
         const REPO_NAME = 'xinchu_shipin';
         const LABEL_ACTIVATED = '已激活';
-        // 替换原来的 BASE_VIDEO_URL
+        const STORAGE_KEY = 'xinxichuli_activated_phone';
+
+        // ================================================================
+        // ★★★ 视频地址：根据设备动态切换 HTTP/HTTPS ★★★
+        // ================================================================
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         const PROTOCOL = isMobile ? 'http://' : 'https://';
         const BASE_VIDEO_URL = PROTOCOL + 'cddsw.zyzcc.cn/xinxichuliyuan/';
-        const STORAGE_KEY = 'xinxichuli_activated_phone';
+        console.log('📱 当前设备:', isMobile ? '手机' : '电脑', '使用协议:', PROTOCOL);
 
         // ================================================================
         // ★★★ 科目数据：信息处理技术员 ★★★
         // ================================================================
-        // 四类视频，每类暂时只有1个视频（方便测试），后续可自行添加
         const categories = [
             {
                 id: 'shicao',
                 name: '实操部分',
                 icon: 'fa-hand-pointer',
                 videos: [
-                    { title: '实操 · 水费账单', desc: '信息处理技术员实操教学', filename: 'word01shuidianfei.mp4' }
-                    // 后续添加示例：
-                    // { title: '实操 · Excel数据处理', desc: 'Excel数据整理与计算', filename: 'shicao02excel.mp4' },
+                    { 
+                        title: '实操 · 水费账单', 
+                        desc: '信息处理技术员实操教学', 
+                        filename: 'word01shuidianfei.mp4',
+                        // ★★★ 封面图示例：把这张图传到你的七牛云，然后修改下面的地址 ★★★
+                        poster: 'https://cddsw.zyzcc.cn/xinxichuliyuan/posters/word01.jpg'
+                    }
                 ]
             },
             {
@@ -277,7 +313,12 @@
                 name: '理论部分',
                 icon: 'fa-book',
                 videos: [
-                    { title: '理论 · 基础知识', desc: '信息处理技术员理论精讲', filename: 'lilun01jichu.mp4' }
+                    { 
+                        title: '理论 · 基础知识', 
+                        desc: '信息处理技术员理论精讲', 
+                        filename: 'lilun01jichu.mp4',
+                        poster: ''  // 不填则显示浅色背景
+                    }
                 ]
             },
             {
@@ -285,7 +326,12 @@
                 name: '题目讲解',
                 icon: 'fa-puzzle-piece',
                 videos: [
-                    { title: '题目 · 真题解析', desc: '历年真题详细讲解', filename: 'timu01zhenti.mp4' }
+                    { 
+                        title: '题目 · 真题解析', 
+                        desc: '历年真题详细讲解', 
+                        filename: 'timu01zhenti.mp4',
+                        poster: ''
+                    }
                 ]
             },
             {
@@ -293,7 +339,12 @@
                 name: '难点回顾',
                 icon: 'fa-star',
                 videos: [
-                    { title: '难点 · 易错点总结', desc: '高频难点回顾与突破', filename: 'nandian01yicuo.mp4' }
+                    { 
+                        title: '难点 · 易错点总结', 
+                        desc: '高频难点回顾与突破', 
+                        filename: 'nandian01yicuo.mp4',
+                        poster: ''
+                    }
                 ]
             }
         ];
@@ -405,12 +456,14 @@
                         <div class="video-grid">`;
 
                 category.videos.forEach((video, vIdx) => {
-                    const isUnlocked = activated; // 没有免费试看，全部需要激活
+                    const isUnlocked = activated;
                     const lockedClass = isUnlocked ? '' : 'locked';
                     const lockDisplay = isUnlocked ? 'none' : 'flex';
                     const playerDisplay = isUnlocked ? 'block' : 'none';
                     const placeholderDisplay = isUnlocked ? 'none' : 'flex';
                     const videoSrc = getVideoUrl(video.filename);
+                    // ★★★ 如果有封面图则使用，否则留空 ★★★
+                    const posterAttr = video.poster ? `poster="${video.poster}"` : '';
 
                     html += `
                         <div class="video-card ${lockedClass}" data-locked="${!isUnlocked}">
@@ -425,7 +478,7 @@
                                 </div>
                                 <div class="video-desc"><i class="fas fa-tag"></i> ${video.desc}</div>
                                 <div class="video-player-container" style="display:${playerDisplay};">
-                                    <video controls preload="metadata">
+                                    <video controls preload="metadata" ${posterAttr}>
                                         <source src="${videoSrc}" type="video/mp4">
                                         您的浏览器不支持 video 标签。
                                     </video>
@@ -444,7 +497,6 @@
 
             container.innerHTML = html;
 
-            // 点击折叠展开
             document.querySelectorAll('.folder-header').forEach(header => {
                 header.addEventListener('click', function() {
                     const targetId = this.dataset.target;
@@ -601,6 +653,7 @@
 
             console.log('🎯 信息处理技术员视频学习平台已加载');
             console.log('📁 四类课程: 实操、理论、题目讲解、难点回顾');
+            console.log('📌 视频协议:', PROTOCOL);
         }
 
         activateBtn.addEventListener('click', function() {
