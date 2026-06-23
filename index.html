@@ -42,7 +42,6 @@
         .folder-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.2s ease; padding: 0 20px; }
         .folder-content.open { max-height: 5000px; padding: 0 20px 20px 20px; }
 
-        /* 二级分类缩进 */
         .sub-folder {
             margin-left: 10px !important;
             border-left: 3px solid #c5dceb !important;
@@ -73,9 +72,11 @@
         .video-card { background: #ffffffdd; border-radius: 20px; padding: 12px; box-shadow: 0 4px 12px -6px rgba(0,30,40,0.04); border: 1px solid rgba(255,255,255,0.8); display: flex; flex-direction: column; }
         .video-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -10px rgba(0,50,70,0.12); border-color: #cce0ed; }
         .video-thumbnail { position: relative; border-radius: 14px; overflow: hidden; background: #0e2a38; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-        .video-thumbnail i { font-size: 2.2rem; color: rgba(255,255,255,0.5); }
+        .video-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        .video-thumbnail i { font-size: 2.2rem; color: rgba(255,255,255,0.5); position: absolute; }
         .video-card.locked .video-thumbnail i { color: rgba(255,215,120,0.5); }
         .video-thumbnail .lock-overlay { position: absolute; inset: 0; background: rgba(10,30,42,0.45); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #ffd966; }
+        .video-thumbnail .lock-overlay i { position: static; }
         .video-meta { flex: 1; display: flex; flex-direction: column; }
         .video-title { font-weight: 700; font-size: 0.9rem; color: #12303f; margin-bottom: 2px; display: flex; align-items: center; justify-content: space-between; }
         .video-title .section-num { font-size: 0.6rem; background: #dce8f2; padding: 2px 10px; border-radius: 40px; font-weight: 600; color: #1a4d66; }
@@ -150,9 +151,6 @@
             margin-top: 4px;
         }
 
-        /* ================================================================
-                   ★★★ 手机端适配 ★★★
-                   ================================================================ */
         @media (max-width: 600px) {
             body { padding: 10px; }
             .app-wrapper { padding: 16px 12px; border-radius: 28px; }
@@ -273,7 +271,7 @@
 
     <div class="subject-title-area">
         <h1><i class="fas fa-graduation-cap"></i>信息处理技术员</h1>
-        <p><i class="fas fa-video"></i> 实操 · 理论 &nbsp;|&nbsp; 激活后解锁全部视频</p>
+        <p><i class="fas fa-video"></i> 学前必看 · 实操 · 理论 · 题目讲解 · 难点回顾 &nbsp;|&nbsp; 激活后解锁全部视频</p>
     </div>
 
     <div class="activation-area" id="activationArea" style="padding: 6px 10px !important; gap: 4px !important; border-radius: 20px !important;">
@@ -298,7 +296,7 @@
     <div id="subjectContainer"></div>
 
     <div class="footer-note">
-        <span><i class="fas fa-video"></i> 信息处理技术员 · 全套课程</span>
+        <span><i class="fas fa-video"></i> 信息处理技术员 · 全套课程（62节）</span>
         <span><i class="fas fa-cloud-upload-alt"></i> 七牛云存储</span>
         <span><i class="fas fa-mobile-alt"></i> 手机 / 电脑 均可观看</span>
     </div>
@@ -329,13 +327,32 @@
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         const PROTOCOL = isMobile ? 'http://' : 'https://';
         const BASE_VIDEO_URL = PROTOCOL + 'cddsw.zyzcc.cn/xinxichuliyuan/';
+        const BASE_POSTER_URL = PROTOCOL + 'cddsw.zyzcc.cn/xinxichuliyuan/posters/';
         console.log('📱 当前设备:', isMobile ? '手机' : '电脑', '使用协议:', PROTOCOL);
 
         // ================================================================
-        // ★★★ 科目数据：信息处理技术员（二级分类） ★★★
+        // ★★★ 科目数据：信息处理技术员（五类，含封面图） ★★★
         // ================================================================
         const categories = [
-            // ==================== 实操部分（大类） ====================
+            // ==================== 一、学前必看 ====================
+            {
+                id: 'bikan',
+                name: '学前必看',
+                icon: 'fa-eye',
+                children: [
+                    {
+                        id: 'bikan',
+                        name: '必看内容',
+                        icon: 'fa-play-circle',
+                        poster: 'bikan.jpg',
+                        videos: [
+                            { title: '必看01', desc: '必看内容（一）', filename: 'bikan01.mp4' },
+                            { title: '必看02', desc: '必看内容（二）', filename: 'bikan02.mp4' }
+                        ]
+                    }
+                ]
+            },
+            // ==================== 二、实操部分 ====================
             {
                 id: 'shicao',
                 name: '实操部分',
@@ -345,66 +362,70 @@
                         id: 'word',
                         name: 'Word',
                         icon: 'fa-file-word',
+                        poster: 'word.jpg',
                         videos: [
-                            { title: '实操Word01', desc: '水电费清单', filename: 'word01shuidianfei.mp4', poster: '' },
-                            { title: '实操Word02', desc: '一滴水经过丽江', filename: 'word02lijiang.mp4', poster: '' },
-                            { title: '实操Word03', desc: '固定资产申请单', filename: 'word03shenqingbiao.mp4', poster: '' },
-                            { title: '实操Word04', desc: '物流管理概述', filename: 'word04wuliu.mp4', poster: '' },
-                            { title: '实操Word05', desc: '学生外语课程学习评价表', filename: 'word05waiyu.mp4', poster: '' },
-                            { title: '实操Word06', desc: '沧浪亭', filename: 'word06canglangting.mp4', poster: '' },
-                            { title: '实操Word07', desc: 'PM2.5', filename: 'word07keli.mp4', poster: '' },
-                            { title: '实操Word08', desc: '个人简历', filename: 'word08jianli.mp4', poster: '' },
-                            { title: '实操Word09', desc: '玫瑰花', filename: 'word09meigui.mp4', poster: '' },
-                            { title: '实操Word10', desc: '个人简历', filename: 'word10jianli.mp4', poster: '' },
-                            { title: '实操Word11', desc: '山地之旅一贵州', filename: 'word11guizhou.mp4', poster: '' },
-                            { title: '实操Word12', desc: '面试评定表', filename: 'word12mianshi.mp4', poster: '' },
-                            { title: '实操Word13', desc: '青海湖环湖赛', filename: 'word13qinghaihu.mp4', poster: '' },
-                            { title: '实操Word14', desc: '应聘人员登记表', filename: 'word14yingpin.mp4', poster: '' }
+                            { title: '实操Word01', desc: '水电费清单', filename: 'word01shuidianfei.mp4' },
+                            { title: '实操Word02', desc: '一滴水经过丽江', filename: 'word02lijiang.mp4' },
+                            { title: '实操Word03', desc: '固定资产申请单', filename: 'word03shenqingbiao.mp4' },
+                            { title: '实操Word04', desc: '物流管理概述', filename: 'word04wuliu.mp4' },
+                            { title: '实操Word05', desc: '学生外语课程学习评价表', filename: 'word05waiyu.mp4' },
+                            { title: '实操Word06', desc: '沧浪亭', filename: 'word06canglangting.mp4' },
+                            { title: '实操Word07', desc: 'PM2.5', filename: 'word07keli.mp4' },
+                            { title: '实操Word08', desc: '个人简历', filename: 'word08jianli.mp4' },
+                            { title: '实操Word09', desc: '玫瑰花', filename: 'word09meigui.mp4' },
+                            { title: '实操Word10', desc: '个人简历', filename: 'word10jianli.mp4' },
+                            { title: '实操Word11', desc: '山地之旅（一）贵州', filename: 'word11guizhou.mp4' },
+                            { title: '实操Word12', desc: '面试评定表', filename: 'word12mianshi.mp4' },
+                            { title: '实操Word13', desc: '青海湖环湖赛', filename: 'word13qinghaihu.mp4' },
+                            { title: '实操Word14', desc: '应聘人员登记表', filename: 'word14yingpin.mp4' }
                         ]
                     },
                     {
                         id: 'excel',
                         name: 'Excel',
                         icon: 'fa-table',
+                        poster: 'excel.jpg',
                         videos: [
-                            { title: '实操Excel01', desc: '学生成绩表', filename: 'excel01chengji.mp4', poster: '' },
-                            { title: '实操Excel02', desc: '期末考试计算机成绩表', filename: 'excel02jisuanji.mp4', poster: '' },
-                            { title: '实操Excel03', desc: '2019级部分学生成绩表', filename: 'excel03chengji.mp4', poster: '' },
-                            { title: '实操Excel04', desc: '成绩表', filename: 'excel04chengji.mp4', poster: '' },
-                            { title: '实操Excel05', desc: '学生成绩表', filename: 'excel05chengji.mp4', poster: '' },
-                            { title: '实操Excel06', desc: '体育测试跳远成绩表', filename: 'excel06tiyu.mp4', poster: '' },
-                            { title: '实操Excel07', desc: '学生成绩表', filename: 'excel07chengji.mp4', poster: '' },
-                            { title: '实操Excel08', desc: '学生成绩表', filename: 'excel08chengji.mp4', poster: '' },
-                            { title: '实操Excel09', desc: '跳远预赛成绩表', filename: 'excel09tiaoyuan.mp4', poster: '' },
-                            { title: '实操Excel10', desc: '期中考试数学成绩表', filename: 'excel10shuxue.mp4', poster: '' },
-                            { title: '实操Excel11', desc: '学生成绩表', filename: 'excel11chengji.mp4', poster: '' }
+                            { title: '实操Excel01', desc: '学生成绩表', filename: 'excel01chengji.mp4' },
+                            { title: '实操Excel02', desc: '期末考试计算机成绩表', filename: 'excel02jisuanji.mp4' },
+                            { title: '实操Excel03', desc: '2019级部分学生成绩表', filename: 'excel03chengji.mp4' },
+                            { title: '实操Excel04', desc: '成绩表', filename: 'excel04chengji.mp4' },
+                            { title: '实操Excel05', desc: '学生成绩表', filename: 'excel05chengji.mp4' },
+                            { title: '实操Excel06', desc: '体育测试跳远成绩表', filename: 'excel06tiyu.mp4' },
+                            { title: '实操Excel07', desc: '学生成绩表', filename: 'excel07chengji.mp4' },
+                            { title: '实操Excel08', desc: '学生成绩表', filename: 'excel08chengji.mp4' },
+                            { title: '实操Excel09', desc: '跳远预赛成绩表', filename: 'excel09tiaoyuan.mp4' },
+                            { title: '实操Excel10', desc: '期中考试数学成绩表', filename: 'excel10shuxue.mp4' },
+                            { title: '实操Excel11', desc: '学生成绩表', filename: 'excel11chengji.mp4' }
                         ]
                     },
                     {
                         id: 'ppt',
                         name: 'PPT',
                         icon: 'fa-file-powerpoint',
+                        poster: 'ppt.jpg',
                         videos: [
-                            { title: '实操PPT01', desc: '庆祝中华人民共和国成立70周年', filename: 'ppt01yuebing.mp4', poster: '' },
-                            { title: '实操PPT02', desc: '烈火英雄', filename: 'ppt02yingxiong.mp4', poster: '' },
-                            { title: '实操PPT03', desc: '四个全面', filename: 'ppt03quanmian.mp4', poster: '' },
-                            { title: '实操PPT04', desc: '中国共产党第十九次全国代表大会', filename: 'ppt04dahui.mp4', poster: '' },
-                            { title: '实操PPT05', desc: '中国制造2025', filename: 'ppt05zhizhao.mp4', poster: '' },
-                            { title: '实操PPT06', desc: '临洞庭上张丞相', filename: 'ppt06dongtinghu.mp4', poster: '' },
-                            { title: '实操PPT07', desc: '人生就是如此', filename: 'ppt07rensheng.mp4', poster: '' }
+                            { title: '实操PPT01', desc: '庆祝中华人民共和国成立70周年', filename: 'ppt01yuebing.mp4' },
+                            { title: '实操PPT02', desc: '烈火英雄', filename: 'ppt02yingxiong.mp4' },
+                            { title: '实操PPT03', desc: '四个全面', filename: 'ppt03quanmian.mp4' },
+                            { title: '实操PPT04', desc: '中国共产党第十九次全国代表大会', filename: 'ppt04dahui.mp4' },
+                            { title: '实操PPT05', desc: '中国制造2025', filename: 'ppt05zhizhao.mp4' },
+                            { title: '实操PPT06', desc: '临洞庭上张丞相', filename: 'ppt06dongtinghu.mp4' },
+                            { title: '实操PPT07', desc: '人生就是如此', filename: 'ppt07rensheng.mp4' }
                         ]
                     },
                     {
                         id: 'access',
                         name: 'Access',
                         icon: 'fa-database',
+                        poster: 'access.jpg',
                         videos: [
-                            { title: '实操Access01', desc: '个人表 / 考勤记录表 / 员工考勤统计表', filename: 'access01.mp4', poster: '' }
+                            { title: '实操Access01', desc: '个人表 / 考勤记录表 / 员工考勤统计表', filename: 'access01.mp4' }
                         ]
                     }
                 ]
             },
-            // ==================== 理论部分（大类） ====================
+            // ==================== 三、理论部分 ====================
             {
                 id: 'lilun',
                 name: '理论部分',
@@ -414,76 +435,127 @@
                         id: 'lilun_jichu',
                         name: '信息处理基础',
                         icon: 'fa-book',
+                        poster: 'lilun_jichu.jpg',
                         videos: [
-                            { title: '理论01', desc: '信息处理基础（一）', filename: '01xinxi01.mp4', poster: '' },
-                            { title: '理论01', desc: '信息处理基础（二）', filename: '01xinxi02.mp4', poster: '' }
+                            { title: '理论01', desc: '信息处理基础（一）', filename: '01xinxi01.mp4' },
+                            { title: '理论01', desc: '信息处理基础（二）', filename: '01xinxi02.mp4' }
                         ]
                     },
                     {
                         id: 'lilun_xitong',
                         name: '系统基础知识',
                         icon: 'fa-cogs',
+                        poster: 'lilun_xitong.jpg',
                         videos: [
-                            { title: '理论02', desc: '系统基础知识（一）', filename: '02xitong01.mp4', poster: '' },
-                            { title: '理论02', desc: '系统基础知识（二）', filename: '02xitong02.mp4', poster: '' },
-                            { title: '理论02', desc: '系统基础知识（三）', filename: '02xitong03.mp4', poster: '' }
+                            { title: '理论02', desc: '系统基础知识（一）', filename: '02xitong01.mp4' },
+                            { title: '理论02', desc: '系统基础知识（二）', filename: '02xitong02.mp4' },
+                            { title: '理论02', desc: '系统基础知识（三）', filename: '02xitong03.mp4' }
                         ]
                     },
                     {
                         id: 'lilun_os',
                         name: '操作系统知识',
                         icon: 'fa-window-restore',
+                        poster: 'lilun_os.jpg',
                         videos: [
-                            { title: '理论03', desc: '操作系统知识（一）', filename: '03os01.mp4', poster: '' },
-                            { title: '理论03', desc: '操作系统知识（二）', filename: '03os02.mp4', poster: '' },
-                            { title: '理论03', desc: '操作系统知识（三）', filename: '03os03.mp4', poster: '' }
+                            { title: '理论03', desc: '操作系统知识（一）', filename: '03os01.mp4' },
+                            { title: '理论03', desc: '操作系统知识（二）', filename: '03os02.mp4' },
+                            { title: '理论03', desc: '操作系统知识（三）', filename: '03os03.mp4' }
                         ]
                     },
                     {
                         id: 'lilun_word',
                         name: '文字处理基础',
                         icon: 'fa-file-alt',
+                        poster: 'lilun_word.jpg',
                         videos: [
-                            { title: '理论04', desc: '文字处理基础（一）', filename: '04word01.mp4', poster: '' },
-                            { title: '理论04', desc: '文字处理基础（二）', filename: '04word02.mp4', poster: '' },
-                            { title: '理论04', desc: '文字处理基础（三）', filename: '04word03.mp4', poster: '' }
+                            { title: '理论04', desc: '文字处理基础（一）', filename: '04word01.mp4' },
+                            { title: '理论04', desc: '文字处理基础（二）', filename: '04word02.mp4' },
+                            { title: '理论04', desc: '文字处理基础（三）', filename: '04word03.mp4' }
                         ]
                     },
                     {
                         id: 'lilun_excel',
                         name: '电子表格处理',
                         icon: 'fa-table',
+                        poster: 'lilun_excel.jpg',
                         videos: [
-                            { title: '理论05', desc: '电子表格处理（一）', filename: '05excel01.mp4', poster: '' },
-                            { title: '理论05', desc: '电子表格处理（二）', filename: '05excel02.mp4', poster: '' },
-                            { title: '理论05', desc: '电子表格处理（三）', filename: '05excel03.mp4', poster: '' }
+                            { title: '理论05', desc: '电子表格处理（一）', filename: '05excel01.mp4' },
+                            { title: '理论05', desc: '电子表格处理（二）', filename: '05excel02.mp4' },
+                            { title: '理论05', desc: '电子表格处理（三）', filename: '05excel03.mp4' }
                         ]
                     },
                     {
                         id: 'lilun_ppt_db',
                         name: '演示文稿 & 数据库',
                         icon: 'fa-layer-group',
+                        poster: 'lilun_ppt_db.jpg',
                         videos: [
-                            { title: '理论06', desc: '演示文稿基础', filename: '06ppt.mp4', poster: '' },
-                            { title: '理论06', desc: '数据库的操作', filename: '07db.mp4', poster: '' }
+                            { title: '理论06', desc: '演示文稿基础', filename: '06ppt.mp4' },
+                            { title: '理论06', desc: '数据库的操作', filename: '07db.mp4' }
                         ]
                     },
                     {
                         id: 'lilun_network',
                         name: '网络 & 安全',
                         icon: 'fa-shield-alt',
+                        poster: 'lilun_network.jpg',
                         videos: [
-                            { title: '理论07', desc: '网络与互联网', filename: '08wangluo.mp4', poster: '' },
-                            { title: '理论07', desc: '安全法律法规', filename: '09fagui.mp4', poster: '' }
+                            { title: '理论07', desc: '网络与互联网', filename: '08wangluo.mp4' },
+                            { title: '理论07', desc: '安全法律法规', filename: '09fagui.mp4' }
+                        ]
+                    }
+                ]
+            },
+            // ==================== 四、题目讲解 ====================
+            {
+                id: 'timu',
+                name: '题目讲解',
+                icon: 'fa-puzzle-piece',
+                children: [
+                    {
+                        id: 'timu',
+                        name: '真题 & 练习',
+                        icon: 'fa-tasks',
+                        poster: 'timu.jpg',
+                        videos: [
+                            { title: '题目01', desc: '课后练习（一）', filename: '01kehou.mp4' },
+                            { title: '题目02', desc: '课后练习（二）', filename: '02kehou.mp4' },
+                            { title: '题目03', desc: '课后练习（三）', filename: '03kehou.mp4' },
+                            { title: '题目04', desc: '2019 真题（一）', filename: '2019zhenti01.mp4' },
+                            { title: '题目05', desc: '2019 真题（二）', filename: '2019zhenti02.mp4' },
+                            { title: '题目06', desc: '2019 真题（三）', filename: '2019zhenti03.mp4' },
+                            { title: '题目07', desc: '2019 真题（四）', filename: '2019zhenti04.mp4' }
+                        ]
+                    }
+                ]
+            },
+            // ==================== 五、难点回顾 ====================
+            {
+                id: 'nandian',
+                name: '难点回顾',
+                icon: 'fa-star',
+                children: [
+                    {
+                        id: 'nandian',
+                        name: '函数难点',
+                        icon: 'fa-calculator',
+                        poster: 'nandian.jpg',
+                        videos: [
+                            { title: '难点01', desc: '函数难点（一）', filename: 'function01.mp4' },
+                            { title: '难点02', desc: '函数难点（二）', filename: 'function02.mp4' }
                         ]
                     }
                 ]
             }
         ];
 
-        // 生成视频完整URL
         function getVideoUrl(filename) {
             return BASE_VIDEO_URL + filename;
+        }
+
+        function getPosterUrl(filename) {
+            return BASE_POSTER_URL + filename;
         }
 
         // ================================================================
@@ -568,7 +640,7 @@
         }
 
         // ================================================================
-        // ★★★ 渲染函数：支持二级折叠 ★★★
+        // ★★★ 渲染函数：支持二级折叠，含封面图 ★★★
         // ================================================================
         function renderCategories(activated) {
             if (!container) return;
@@ -589,9 +661,9 @@
                     </div>
                     <div class="folder-content" id="content-${category.id}">`;
 
-                // 遍历子分类
                 category.children.forEach((child) => {
                     const childTotal = child.videos.length;
+                    const posterUrl = getPosterUrl(child.poster);
                     html += `<div class="subject-folder sub-folder" data-sub="${child.id}">
                         <div class="folder-header sub-header" data-target="${child.id}">
                             <div class="folder-header-left">
@@ -613,12 +685,11 @@
                         const playerDisplay = isUnlocked ? 'block' : 'none';
                         const placeholderDisplay = isUnlocked ? 'none' : 'flex';
                         const videoSrc = getVideoUrl(video.filename);
-                        const posterAttr = video.poster ? `poster="${video.poster}"` : '';
 
                         html += `
                             <div class="video-card ${lockedClass}" data-locked="${!isUnlocked}">
                                 <div class="video-thumbnail">
-                                    <i class="fas ${child.icon}"></i>
+                                    <img src="${posterUrl}" alt="${video.title}" loading="lazy">
                                     <div class="lock-overlay" style="display:${lockDisplay};"><i class="fas fa-lock"></i></div>
                                 </div>
                                 <div class="video-meta">
@@ -628,7 +699,7 @@
                                     </div>
                                     <div class="video-desc"><i class="fas fa-tag"></i> ${video.desc}</div>
                                     <div class="video-player-container" style="display:${playerDisplay};">
-                                        <video controls preload="metadata" ${posterAttr}>
+                                        <video controls preload="metadata" poster="${posterUrl}">
                                             <source src="${videoSrc}" type="video/mp4">
                                             您的浏览器不支持 video 标签。
                                         </video>
@@ -653,7 +724,6 @@
             // 绑定一级折叠事件
             document.querySelectorAll('.folder-header:not(.sub-header)').forEach(header => {
                 header.addEventListener('click', function(e) {
-                    // 防止点击子级时冒泡到父级
                     if (e.target.closest('.sub-header')) return;
                     const targetId = this.dataset.target;
                     const content = document.getElementById(`content-${targetId}`);
@@ -694,7 +764,6 @@
                 const playerContainer = card.querySelector('.video-player-container');
                 const placeholder = card.querySelector('.video-player-placeholder');
                 const unlockHint = card.querySelector('.unlock-hint');
-                const thumbnailIcon = card.querySelector('.video-thumbnail i');
 
                 if (isUnlocked) {
                     card.classList.remove('locked');
@@ -702,7 +771,6 @@
                     if (lockOverlay) lockOverlay.style.display = 'none';
                     if (placeholder) placeholder.style.display = 'none';
                     if (playerContainer) playerContainer.style.display = 'block';
-                    if (thumbnailIcon) thumbnailIcon.style.color = '#b8d9f0';
                     unlockHint.innerHTML = '<i class="fas fa-check-circle" style="color:#2a7a4a;"></i> 已解锁';
                     unlockHint.style.background = '#dff0e6';
                     unlockHint.style.color = '#1b6b4a';
@@ -712,7 +780,6 @@
                     if (lockOverlay) lockOverlay.style.display = 'flex';
                     if (placeholder) placeholder.style.display = 'flex';
                     if (playerContainer) playerContainer.style.display = 'none';
-                    if (thumbnailIcon) thumbnailIcon.style.color = 'rgba(255,255,255,0.7)';
                     unlockHint.innerHTML = '<i class="fas fa-lock"></i> 需要激活';
                     unlockHint.style.background = '#eaf3fa';
                     unlockHint.style.color = '#5f7e93';
@@ -825,8 +892,8 @@
                 setStatus('📱 输入已激活的手机号，解锁全部视频', 'info');
             }
 
-            console.log('🎯 信息处理技术员视频学习平台已加载（二级分类）');
-            console.log('📁 结构: 实操部分 → Word/Excel/PPT/Access | 理论部分 → 7个子类');
+            console.log('🎯 信息处理技术员视频学习平台已加载（五类，62节）');
+            console.log('📁 结构: 学前必看 → 实操(Word/Excel/PPT/Access) → 理论(7个子类) → 题目讲解 → 难点回顾');
             console.log('📌 视频协议:', PROTOCOL);
         }
 
