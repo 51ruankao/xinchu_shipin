@@ -258,7 +258,7 @@
     <header class="header">
         <div class="logo-area">
             <div class="logo-icon"><i class="fas fa-file-alt"></i></div>
-            <div class="logo-text">橙多软考<span>· 视频课堂</span></div>
+            <div class="logo-text">信息处理<span>· 视频课堂</span></div>
         </div>
         <div class="activation-badge">
             <i class="fas fa-shield-alt"></i>
@@ -267,8 +267,8 @@
     </header>
 
     <div class="subject-title-area">
-        <h1><i class="fas fa-graduation-cap"></i>信息处理技术员视频课程</h1>
-        <p><i class="fas fa-video"></i> 学前必看 · 实操 · 理论 · 题目讲解 · 难点回顾</p>
+        <h1><i class="fas fa-graduation-cap"></i>信息处理技术员</h1>
+        <p><i class="fas fa-video"></i> 学前必看 · 实操 · 理论 · 题目讲解 · 难点回顾 &nbsp;|&nbsp; 激活后解锁全部视频</p>
     </div>
 
     <div class="activation-area" id="activationArea" style="padding: 6px 10px !important; gap: 4px !important; border-radius: 20px !important;">
@@ -293,7 +293,8 @@
     <div id="subjectContainer"></div>
 
     <div class="footer-note">
-        <span><i class="fas fa-cloud-upload-alt"></i> 橙多软考@版权所有</span>
+        <span><i class="fas fa-video"></i> 信息处理技术员 · 全套课程（62节）</span>
+        <span><i class="fas fa-cloud-upload-alt"></i> 七牛云存储</span>
         <span><i class="fas fa-mobile-alt"></i> 手机 / 电脑 均可观看</span>
     </div>
 </div>
@@ -537,6 +538,19 @@
         }
 
         // ================================================================
+        // ★★★ 全局视频管理：播放新视频时暂停其他视频 ★★★
+        // ================================================================
+        let allVideos = [];
+
+        function pauseAllOtherVideos(currentVideo) {
+            allVideos.forEach(function(video) {
+                if (video !== currentVideo && !video.paused) {
+                    video.pause();
+                }
+            });
+        }
+
+        // ================================================================
         // GitHub API
         // ================================================================
         async function checkPhoneOnGitHub(phone) {
@@ -618,7 +632,7 @@
         }
 
         // ================================================================
-        // ★★★ 渲染函数（支持一级和二级混合） ★★★
+        // ★★★ 渲染函数（支持一级和二级混合，带自动暂停功能） ★★★
         // ================================================================
         function renderCategories(activated) {
             if (!container) return;
@@ -757,6 +771,20 @@
 
             container.innerHTML = html;
 
+            // ================================================================
+            // ★★★ 绑定视频自动暂停事件 ★★★
+            // ================================================================
+            // 清空之前的视频列表
+            allVideos = [];
+            // 获取所有 video 元素
+            const videoElements = container.querySelectorAll('video');
+            videoElements.forEach(function(video) {
+                allVideos.push(video);
+                video.addEventListener('play', function() {
+                    pauseAllOtherVideos(this);
+                });
+            });
+
             // 绑定一级折叠事件
             document.querySelectorAll('.folder-header:not(.sub-header)').forEach(header => {
                 header.addEventListener('click', function(e) {
@@ -789,7 +817,7 @@
         }
 
         // ================================================================
-        // ★★★ 更新所有卡片状态 ★★★
+        // ★★★ 更新所有卡片状态（同时重新绑定视频事件） ★★★
         // ================================================================
         function updateAllCards(activated) {
             const cards = document.querySelectorAll('.video-card');
@@ -820,6 +848,16 @@
                     unlockHint.style.background = '#eaf3fa';
                     unlockHint.style.color = '#5f7e93';
                 }
+            });
+
+            // 重新绑定视频事件（因为 DOM 被更新了）
+            allVideos = [];
+            const videoElements = container.querySelectorAll('video');
+            videoElements.forEach(function(video) {
+                allVideos.push(video);
+                video.addEventListener('play', function() {
+                    pauseAllOtherVideos(this);
+                });
             });
 
             globalStatusText.textContent = activated ? `已激活 (${activePhone})` : '未激活';
@@ -931,6 +969,7 @@
             console.log('🎯 信息处理技术员视频学习平台已加载（五类，62节）');
             console.log('📁 结构: 学前必看 → 实操(Word/Excel/PPT/Access) → 理论(7个子类) → 题目讲解 → 难点回顾');
             console.log('📌 视频协议:', PROTOCOL);
+            console.log('🔇 自动暂停功能已启用：播放新视频时自动暂停其他视频');
         }
 
         activateBtn.addEventListener('click', function() {
