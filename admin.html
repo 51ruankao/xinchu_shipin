@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>成考后台 · 激活管理</title>
+    <title>软考后台 · 激活管理</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -131,7 +131,6 @@
             .add-area input { min-width: unset; }
             .add-area .btn-add, .add-area .btn-refresh { justify-content: center; padding: 12px; }
 
-            /* 表格变卡片 */
             .table-wrap {
                 background: transparent;
                 border: none;
@@ -199,7 +198,7 @@
 
 <div class="admin-wrapper" id="adminMain" style="display:none;">
     <div class="admin-header">
-        <h1><i class="fas fa-users-cog"></i> 激活管理</h1>
+        <h1><i class="fas fa-users-cog"></i> 软考 · 激活管理</h1>
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <span class="sync-status" id="syncStatus"><i class="fas fa-cloud-upload-alt"></i> 已同步</span>
             <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</button>
@@ -245,8 +244,8 @@
             throw new Error('缺少 token 参数');
         }
 
-        const REPO_OWNER = '51chengkao';
-        const REPO_NAME = 'study';
+        const REPO_OWNER = '51ruankao';
+        const REPO_NAME = 'xinchu_shipin';
         const LABEL_ACTIVATED = '已激活';
         const ADMIN_PASSWORD = 'admin888';
 
@@ -473,7 +472,7 @@
 
         refreshBtn.addEventListener('click', renderTable);
 
-        console.log('🔐 后台管理已加载 (GitHub Issues 存储)');
+        console.log('🔐 软考后台管理已加载 (GitHub Issues 存储)');
         console.log(`📁 仓库: ${REPO_OWNER}/${REPO_NAME}`);
         console.log('📞 默认密码: admin888');
     })();
