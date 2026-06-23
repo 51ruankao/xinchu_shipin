@@ -251,7 +251,10 @@
         const REPO_OWNER = '51ruankao';
         const REPO_NAME = 'xinchu_shipin';
         const LABEL_ACTIVATED = '已激活';
-        const BASE_VIDEO_URL = 'https://cddsw.zyzcc.cn/xinxichuliyuan/';
+        // 替换原来的 BASE_VIDEO_URL
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const PROTOCOL = isMobile ? 'http://' : 'https://';
+        const BASE_VIDEO_URL = PROTOCOL + 'cddsw.zyzcc.cn/xinxichuliyuan/';
         const STORAGE_KEY = 'xinxichuli_activated_phone';
 
         // ================================================================
