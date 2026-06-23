@@ -328,28 +328,22 @@
         console.log('📱 当前设备:', isMobile ? '手机' : '电脑', '使用协议:', PROTOCOL);
 
         // ================================================================
-        // ★★★ 科目数据：信息处理技术员（五类，子分类id唯一） ★★★
+        // ★★★ 科目数据（五类，一级/二级混合） ★★★
         // ================================================================
         const categories = [
-            // ==================== 一、学前必看 ====================
+            // ==================== 一、学前必看（一级，直接显示视频） ====================
             {
                 id: 'bikan',
                 name: '学前必看',
                 icon: 'fa-eye',
-                children: [
-                    {
-                        id: 'bikan_sub',    // ✅ 修复：唯一id
-                        name: '必看内容',
-                        icon: 'fa-play-circle',
-                        poster: 'bikan.jpg',
-                        videos: [
-                            { title: '必看01', desc: '必看内容（一）', filename: 'bikan01.mp4' },
-                            { title: '必看02', desc: '必看内容（二）', filename: 'bikan02.mp4' }
-                        ]
-                    }
+                isLeaf: true,
+                poster: 'bikan.jpg',
+                videos: [
+                    { title: '必看01', desc: '必看内容（一）', filename: 'bikan01.mp4' },
+                    { title: '必看02', desc: '必看内容（二）', filename: 'bikan02.mp4' }
                 ]
             },
-            // ==================== 二、实操部分 ====================
+            // ==================== 二、实操部分（二级：Word/Excel/PPT/Access） ====================
             {
                 id: 'shicao',
                 name: '实操部分',
@@ -422,7 +416,7 @@
                     }
                 ]
             },
-            // ==================== 三、理论部分 ====================
+            // ==================== 三、理论部分（二级：7个子类） ====================
             {
                 id: 'lilun',
                 name: '理论部分',
@@ -504,45 +498,33 @@
                     }
                 ]
             },
-            // ==================== 四、题目讲解 ====================
+            // ==================== 四、题目讲解（一级，直接显示视频） ====================
             {
                 id: 'timu',
                 name: '题目讲解',
                 icon: 'fa-puzzle-piece',
-                children: [
-                    {
-                        id: 'timu_sub',     // ✅ 修复：唯一id
-                        name: '真题 & 练习',
-                        icon: 'fa-tasks',
-                        poster: 'timu.jpg',
-                        videos: [
-                            { title: '题目01', desc: '课后练习（一）', filename: '01kehou.mp4' },
-                            { title: '题目02', desc: '课后练习（二）', filename: '02kehou.mp4' },
-                            { title: '题目03', desc: '课后练习（三）', filename: '03kehou.mp4' },
-                            { title: '题目04', desc: '2019 真题（一）', filename: '2019zhenti01.mp4' },
-                            { title: '题目05', desc: '2019 真题（二）', filename: '2019zhenti02.mp4' },
-                            { title: '题目06', desc: '2019 真题（三）', filename: '2019zhenti03.mp4' },
-                            { title: '题目07', desc: '2019 真题（四）', filename: '2019zhenti04.mp4' }
-                        ]
-                    }
+                isLeaf: true,
+                poster: 'timu.jpg',
+                videos: [
+                    { title: '题目01', desc: '课后练习（一）', filename: '01kehou.mp4' },
+                    { title: '题目02', desc: '课后练习（二）', filename: '02kehou.mp4' },
+                    { title: '题目03', desc: '课后练习（三）', filename: '03kehou.mp4' },
+                    { title: '题目04', desc: '2019 真题（一）', filename: '2019zhenti01.mp4' },
+                    { title: '题目05', desc: '2019 真题（二）', filename: '2019zhenti02.mp4' },
+                    { title: '题目06', desc: '2019 真题（三）', filename: '2019zhenti03.mp4' },
+                    { title: '题目07', desc: '2019 真题（四）', filename: '2019zhenti04.mp4' }
                 ]
             },
-            // ==================== 五、难点回顾 ====================
+            // ==================== 五、难点回顾（一级，直接显示视频） ====================
             {
                 id: 'nandian',
                 name: '难点回顾',
                 icon: 'fa-star',
-                children: [
-                    {
-                        id: 'nandian_sub',  // ✅ 修复：唯一id
-                        name: '函数难点',
-                        icon: 'fa-calculator',
-                        poster: 'nandian.jpg',
-                        videos: [
-                            { title: '难点01', desc: '函数难点（一）', filename: 'function01.mp4' },
-                            { title: '难点02', desc: '函数难点（二）', filename: 'function02.mp4' }
-                        ]
-                    }
+                isLeaf: true,
+                poster: 'nandian.jpg',
+                videos: [
+                    { title: '难点01', desc: '函数难点（一）', filename: 'function01.mp4' },
+                    { title: '难点02', desc: '函数难点（二）', filename: 'function02.mp4' }
                 ]
             }
         ];
@@ -637,13 +619,71 @@
         }
 
         // ================================================================
-        // ★★★ 渲染函数：支持二级折叠，含封面图 ★★★
+        // ★★★ 渲染函数（支持一级和二级混合） ★★★
         // ================================================================
         function renderCategories(activated) {
             if (!container) return;
             let html = '';
 
             categories.forEach((category) => {
+                // ========== 一级分类（叶子节点）：直接显示视频 ==========
+                if (category.isLeaf) {
+                    const totalVideos = category.videos.length;
+                    const posterUrl = getPosterUrl(category.poster);
+                    html += `<div class="subject-folder" data-category="${category.id}">
+                        <div class="folder-header" data-target="${category.id}">
+                            <div class="folder-header-left">
+                                <i class="fas ${category.icon}"></i>
+                                <h2>${category.name}</h2>
+                                <span class="badge-count">${totalVideos} 节</span>
+                            </div>
+                            <div class="folder-toggle" data-target="${category.id}">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="folder-content" id="content-${category.id}">
+                            <div class="video-grid">`;
+
+                    category.videos.forEach((video, vIdx) => {
+                        const isUnlocked = activated;
+                        const lockedClass = isUnlocked ? '' : 'locked';
+                        const lockDisplay = isUnlocked ? 'none' : 'flex';
+                        const playerDisplay = isUnlocked ? 'block' : 'none';
+                        const placeholderDisplay = isUnlocked ? 'none' : 'flex';
+                        const videoSrc = getVideoUrl(video.filename);
+
+                        html += `
+                            <div class="video-card ${lockedClass}" data-locked="${!isUnlocked}">
+                                <div class="video-thumbnail">
+                                    <img src="${posterUrl}" alt="${video.title}" loading="lazy">
+                                    <div class="lock-overlay" style="display:${lockDisplay};"><i class="fas fa-lock"></i></div>
+                                </div>
+                                <div class="video-meta">
+                                    <div class="video-title">
+                                        ${video.title}
+                                        <span class="section-num">${vIdx+1}/${totalVideos}</span>
+                                    </div>
+                                    <div class="video-desc"><i class="fas fa-tag"></i> ${video.desc}</div>
+                                    <div class="video-player-container" style="display:${playerDisplay};">
+                                        <video controls preload="metadata" poster="${posterUrl}">
+                                            <source src="${videoSrc}" type="video/mp4">
+                                            您的浏览器不支持 video 标签。
+                                        </video>
+                                    </div>
+                                    <div class="video-player-placeholder" style="display:${placeholderDisplay};">
+                                        <i class="fas fa-play-circle"></i> 激活后观看
+                                    </div>
+                                    <span class="unlock-hint">${isUnlocked ? '<i class="fas fa-check-circle" style="color:#2a7a4a;"></i> 已解锁' : '<i class="fas fa-lock"></i> 需要激活'}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += `</div></div></div>`;
+                    return;
+                }
+
+                // ========== 二级分类：有 children ==========
                 const totalVideos = category.children.reduce((sum, child) => sum + child.videos.length, 0);
                 html += `<div class="subject-folder" data-category="${category.id}">
                     <div class="folder-header" data-target="${category.id}">
