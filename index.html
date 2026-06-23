@@ -73,8 +73,6 @@
         .video-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -10px rgba(0,50,70,0.12); border-color: #cce0ed; }
         .video-thumbnail { position: relative; border-radius: 14px; overflow: hidden; background: #0e2a38; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
         .video-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
-        .video-thumbnail i { font-size: 2.2rem; color: rgba(255,255,255,0.5); position: absolute; }
-        .video-card.locked .video-thumbnail i { color: rgba(255,215,120,0.5); }
         .video-thumbnail .lock-overlay { position: absolute; inset: 0; background: rgba(10,30,42,0.45); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #ffd966; }
         .video-thumbnail .lock-overlay i { position: static; }
         .video-meta { flex: 1; display: flex; flex-direction: column; }
@@ -207,7 +205,6 @@
             }
             .video-card { padding: 8px; border-radius: 14px; }
             .video-thumbnail { border-radius: 10px; }
-            .video-thumbnail i { font-size: 1.6rem; }
             .video-title { font-size: 0.8rem; flex-wrap: wrap; gap: 2px; }
             .video-title .section-num { font-size: 0.5rem; padding: 1px 8px; }
             .video-desc { font-size: 0.65rem; }
@@ -331,7 +328,7 @@
         console.log('📱 当前设备:', isMobile ? '手机' : '电脑', '使用协议:', PROTOCOL);
 
         // ================================================================
-        // ★★★ 科目数据：信息处理技术员（五类，含封面图） ★★★
+        // ★★★ 科目数据：信息处理技术员（五类，子分类id唯一） ★★★
         // ================================================================
         const categories = [
             // ==================== 一、学前必看 ====================
@@ -341,7 +338,7 @@
                 icon: 'fa-eye',
                 children: [
                     {
-                        id: 'bikan',
+                        id: 'bikan_sub',    // ✅ 修复：唯一id
                         name: '必看内容',
                         icon: 'fa-play-circle',
                         poster: 'bikan.jpg',
@@ -514,7 +511,7 @@
                 icon: 'fa-puzzle-piece',
                 children: [
                     {
-                        id: 'timu',
+                        id: 'timu_sub',     // ✅ 修复：唯一id
                         name: '真题 & 练习',
                         icon: 'fa-tasks',
                         poster: 'timu.jpg',
@@ -537,7 +534,7 @@
                 icon: 'fa-star',
                 children: [
                     {
-                        id: 'nandian',
+                        id: 'nandian_sub',  // ✅ 修复：唯一id
                         name: '函数难点',
                         icon: 'fa-calculator',
                         poster: 'nandian.jpg',
